@@ -54,6 +54,40 @@ namespace Parser_u0929730
                 table[i] = rulios;
             }
             //finish me
+            bool go = true;
+            while (go)
+            {
+                string test = Console.ReadLine();
+                test = test + "$";
+                stak.Push("$");
+                stak.Push(nonterminals[0]);
+                for(int i = 0; i < test.Length; i++)
+                {
+                    string red = test.Substring(i, 1);
+                    int[] keyble = table[nonterminals.IndexOf(stak.Peek())];
+                    int hey = terminals.IndexOf(red);
+                    switch (keyble[hey])
+                    {
+                        case ((int)0):
+                            {
+                                Console.WriteLine("no");
+                                go = false;
+                                break;
+                            }
+                        default:
+                            {
+                                stak.Pop();
+                                foreach(char ch in rules[keyble[hey]].ToCharArray())
+                                {
+                                    stak.Push(ch.ToString());
+                                }
+                                Console.WriteLine("So far so good.");
+                                break;
+                            }
+                    }
+                }
+                Console.WriteLine("yes");
+            }
         }
     }
 }
