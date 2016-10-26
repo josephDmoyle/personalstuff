@@ -12,7 +12,7 @@ namespace Parser_u0929730
         static void Main(string[] args)
         {
             Stack<string> stak = new Stack<string>();
-            StreamReader reader = new StreamReader(args[0]);
+            StreamReader reader = new StreamReader(Console.ReadLine());
             char[] vars = reader.ReadLine().ToCharArray();
             List<string> nonterminals = new List<string>();
             foreach(char ch in vars)
@@ -31,7 +31,7 @@ namespace Parser_u0929730
             }
             int prodnum = int.Parse(reader.ReadLine());
             Console.WriteLine(prodnum);
-            List<string> rules = new List<string>(prodnum+1);
+            string[] rules = new string[prodnum+1];
             for(int i = 1; i < prodnum + 1; i++)
             {
                 string line = reader.ReadLine();
@@ -44,12 +44,18 @@ namespace Parser_u0929730
             for(int i =0; i < nonterminals.Count; i++)
             {
                 string line = reader.ReadLine();
-                int[] rulios = new int[nonterminals.Count + 1];
-                int j = 1;
-                foreach(int inty in line.Split(',').Select(x => int.Parse(x)))
+                int[] rulios = new int[terminals.Count + 1];
+                int j = 0;
+                foreach(char ch in line.ToCharArray())
                 {
-                    rulios[j] = inty;
-                    j++;
+                    int mayy;
+                    if (int.TryParse(ch.ToString(), out mayy))
+                    {
+                        rulios[j] = mayy;
+                        Console.WriteLine("rulenum:");
+                        Console.WriteLine(rulios[j]);
+                        j++;
+                    }
                 }
                 table[i] = rulios;
             }
@@ -57,6 +63,7 @@ namespace Parser_u0929730
             bool go = true;
             while (go)
             {
+                string message = "yes";
                 string test = Console.ReadLine();
                 test = test + "$";
                 stak.Push("$");
@@ -64,29 +71,57 @@ namespace Parser_u0929730
                 for(int i = 0; i < test.Length; i++)
                 {
                     string red = test.Substring(i, 1);
-                    int[] keyble = table[nonterminals.IndexOf(stak.Peek())];
-                    int hey = terminals.IndexOf(red);
-                    switch (keyble[hey])
+                    bool keep = true;
+                    while (keep)
                     {
-                        case ((int)0):
+                        while (stak.Peek() == "-")
+                        {
+                            stak.Pop();
+                        }
+                        if (red == "$")
+                        {
+                            keep = false;
+                        }
+                        if (stak.Peek() == red)
+                        {
+                            stak.Pop();
+                            keep = false;
+                        }
+                        else
+                        {
+                            try
                             {
-                                Console.WriteLine("no");
-                                go = false;
-                                break;
-                            }
-                        default:
-                            {
-                                stak.Pop();
-                                foreach(char ch in rules[keyble[hey]].ToCharArray())
+                                int[] keyble = table[nonterminals.IndexOf(stak.Peek())];
+                                int hey = terminals.IndexOf(red);
+                                switch (keyble[hey])
                                 {
-                                    stak.Push(ch.ToString());
+                                    case ((int)0):
+                                        {
+                                            message = "no";
+                                            keep = false;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            stak.Pop();
+                                            for (int y = rules[keyble[hey]].ToCharArray().Length - 1; y > -1; y--)
+                                            {
+                                                stak.Push(rules[keyble[hey]].ToCharArray()[y].ToString());
+                                            }
+                                            Console.WriteLine("So far so good.");
+                                            break;
+                                        }
                                 }
-                                Console.WriteLine("So far so good.");
-                                break;
                             }
+                            catch (Exception)
+                            {
+                                message = "no";
+                                keep = false;
+                            }
+                        }
                     }
                 }
-                Console.WriteLine("yes");
+                Console.WriteLine(message);
             }
         }
     }
