@@ -18,27 +18,20 @@ namespace Parser_u0929730
             foreach(char ch in vars)
             {
                 nonterminals.Add(ch.ToString());
-                Console.WriteLine("nonterminal:");
-                Console.WriteLine(ch.ToString());
             }
             char[] terms = reader.ReadLine().ToCharArray();
             List<string> terminals = new List<string>();
             foreach (char ch in terms)
             {
                 terminals.Add(ch.ToString());
-                Console.WriteLine("terminal:");
-                Console.WriteLine(ch.ToString());
             }
             int prodnum = int.Parse(reader.ReadLine());
-            Console.WriteLine(prodnum);
             string[] rules = new string[prodnum+1];
             for(int i = 1; i < prodnum + 1; i++)
             {
                 string line = reader.ReadLine();
                 line = line.Substring(2);
                 rules[i] = line;
-                Console.WriteLine("rule:");
-                Console.WriteLine(line);
             }
             int[][] table = new int[nonterminals.Count][];
             for(int i =0; i < nonterminals.Count; i++)
@@ -52,8 +45,6 @@ namespace Parser_u0929730
                     if (int.TryParse(ch.ToString(), out mayy))
                     {
                         rulios[j] = mayy;
-                        Console.WriteLine("rulenum:");
-                        Console.WriteLine(rulios[j]);
                         j++;
                     }
                 }
@@ -108,7 +99,6 @@ namespace Parser_u0929730
                                             {
                                                 stak.Push(rules[keyble[hey]].ToCharArray()[y].ToString());
                                             }
-                                            Console.WriteLine("So far so good.");
                                             break;
                                         }
                                 }
