@@ -66,7 +66,7 @@ namespace Simulated_Cache
             {
                 string row = binstructions[j].Substring(binstructions[j].Length - (offset + rowy), rowy);
                 string tag = binstructions[j].Substring(0, binstructions[j].Length - (offset + rowy));
-                int rowe = Convert.ToInt32(row);
+                int rowe = Convert.ToInt32(row, 2);
                 bool isContained = false;
                 for (int i = 0; i < tags.Length; i++)
                 {
@@ -101,7 +101,7 @@ namespace Simulated_Cache
             {
                 string row = binstructions[j].Substring(binstructions[j].Length - (offset + rowy), rowy);
                 string tag = binstructions[j].Substring(0, binstructions[j].Length - (offset + rowy));
-                int rowe = Convert.ToInt32(row);
+                int rowe = Convert.ToInt32(row, 2);
                 bool isContained = false;
                 for (int i = 0; i < tags.Length; i++)
                 {
@@ -138,15 +138,19 @@ namespace Simulated_Cache
             }
 
             Console.WriteLine(elapse);
+            Console.WriteLine("Total Bits:");
+            Console.WriteLine(ways*(Math.Pow(2, rowy)*(rowy + (binstructions[0].Length - rowy - offset) + (8 * Convert.ToInt32(Math.Pow(2, offset))) + 1 + 2)));
+            //ways *( rows*(row markers + TAG +  data + valid + LRU))
         }
 
         static void fullyAssociative(List<string> binstructions)
         {
-            int offset = 4;
+            int offset = 3;
+            int rowy = 9;
             int elapse = 0;
-            int[] LRU = new int[offset];
-            string[] tags = new string[offset];
-            bool[] valid = new bool[offset];
+            int[] LRU = new int[rowy];
+            string[] tags = new string[rowy];
+            bool[] valid = new bool[rowy];
             for (int i = 0; i < tags.Length; i++)
             {
                 tags[i] = "";
@@ -199,11 +203,14 @@ namespace Simulated_Cache
                 LRU = increment(LRU);
             }
             Console.WriteLine(elapse);
+            Console.WriteLine("Number of bits");
+            Console.WriteLine(tags.Length*((binstructions[0].Length - offset) + 8 *  Math.Pow(2, offset) + 1 + 2));
+            //bits = rows ( tag + data + valid + lru)
         }
 
         static void directMapped(List<string> binstructions)
         {
-            int offset = 5;
+            int offset = 4;
             int rowy = 2;
             int elapse = 0;
             string[] tags = new string[Convert.ToInt32(Math.Pow(2, rowy))];
@@ -254,6 +261,9 @@ namespace Simulated_Cache
                 }
             }
             Console.WriteLine(elapse);
+            Console.WriteLine("Total Bits:");
+            Console.WriteLine(Math.Pow(2, rowy) * (rowy + (binstructions[0].Length - offset - rowy) + 1 + (8 * Math.Pow(2, offset))));
+            // rows(row tag valid data)
         }
 
         static int[] increment(int[] incr)
